@@ -1,0 +1,20 @@
+//HERC01VS JOB (1),'CREATE VSAM',CLASS=A,MSGCLASS=H,MSGLEVEL=(1,1),     00000102
+// USER=HERC01,PASSWORD=CUL8TR,REGION=4M,NOTIFY=HERC01                  00000201
+//*                                                                     00000301
+//DELDEF EXEC PGM=IDCAMS,REGION=1024K                                   00000401
+//SYSPRINT DD SYSOUT=*                                                  00000501
+//SYSIN DD *                                                            00000601
+ DELETE HERC01.MOSHIX.EMPLOYE                                           00000702
+ SET MAXCC = 0                                                          00000801
+ DEFINE CLUSTER                                       -                 00000901
+     (NAME(HERC01.MOSHIX.EMPLOYE) INDEXED   -                           00001002
+      VOLUMES(PUB001)                                -                  00001101
+      TRACKS(15 15)                                  -                  00001201
+      SHAREOPTIONS(1 3) UNIQUE                       -                  00001301
+      RECORDSIZE(23 23) SPANNED                   -                     00001401
+      KEYS(2 0)                                     -                   00001501
+     )                                               -                  00001601
+    DATA ( NAME(HERC01.MOSHIX.EMPLOYE.DATA)) -                          00001702
+   INDEX ( NAME(HERC01.MOSHIX.EMPLOYE.INDEX))                           00001802
+/*                                                                      00001901
+//                                                                      00002002

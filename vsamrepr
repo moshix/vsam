@@ -1,0 +1,12 @@
+//HERC01RE JOB (1),'REPRO DATA',CLASS=A,MSGCLASS=H,MSGLEVEL=(1,1),      00000100
+// USER=HERC01,PASSWORD=CUL8TR,REGION=4M,NOTIFY=HERC01                  00000200
+//*                                                                     00000300
+//REPRO  EXEC PGM=IDCAMS,REGION=1024K                                   00000400
+//INDD DD DSN=HERC01.MOSHIX.INDD,DISP=SHR                               00000500
+//OUTDD DD DSN=HERC01.MOSHIX.EMPLOYE,DISP=SHR                           00000600
+//SYSPRINT DD SYSOUT=*                                                  00000700
+//SYSIN DD *                                                            00000800
+  REPRO INFILE(INDD)                   -                                00000900
+        OUTFILE(OUTDD)                                                  00001000
+/*                                                                      00001100
+//                                                                      00001200

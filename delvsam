@@ -1,0 +1,9 @@
+//HERC01DE JOB (1),'DELETE VSAM CL',CLASS=A,MSGCLASS=H,MSGLEVEL=(1,1),  00000101
+// USER=HERC01,PASSWORD=CUL8TR,REGION=4M,NOTIFY=HERC01                  00000200
+//*                                                                     00000300
+//DELDEF EXEC PGM=IDCAMS,REGION=1024K                                   00000400
+//SYSPRINT DD SYSOUT=*                                                  00000500
+//SYSIN DD *                                                            00000600
+ DELETE HERC01.MOSHIX.EMPLOYE                                           00000702
+/*                                                                      00000800
+//                                                                      00000900
