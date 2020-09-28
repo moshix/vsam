@@ -1,0 +1,92 @@
+         TITLE 'PROGRAM TO LOAD AN KSDS CLUSTER'
+         PRINT GEN
+ACCVSAM  CSECT
+***********************************************************************
+* This program will run on an IBM Mainframe using MVS asmf or hlasm   *
+*                                                                     *
+* This program provides an example of an assembler I/O sub-routine    *
+* that provides access to a VSAM Keyed-Sequential-Data-Set (KSDS).    *
+*                                                                     *
+***********************************************************************
+*                                                                     *
+*                                                                     *
+* From    To   Length  Description                                    *
+*    1     2      2    Primary Key                                    *
+*    7     7      1    Space                                          *
+*    4     9      6    SECONDARY KEY                                  *
+*    10   10      1    SPACE                                          *
+*   11    15      5    employee record locator                        *
+*   16    16      1    SPACE                                          *
+*   17    24      8    DATE OF HIRING ALPHANUMERIC                    *
+*                                                                     *
+***********************************************************************
+*
+R0       EQU   0
+R1       EQU   1
+R2       EQU   2
+R3       EQU   3
+R4       EQU   4
+R5       EQU   5
+R6       EQU   6
+R7       EQU   7
+R8       EQU   8
+R9       EQU   9
+R10      EQU   10
+R11      EQU   11
+R12      EQU   12
+R13      EQU   13
+R14      EQU   14
+R15      EQU   15
+*
+*
+         SAVE    (14,12)                  SAVE REGS ON ENTRY
+         BASR    R12,0                    SET UP BASE REGS LIKE BAL
+         USING   *,R12                    S/360 STYLE ENTRY, I KNOW
+         ST      R13,SAVEA+4              ENSURE SAVEA CHAIN BUILT
+         LA      R13,SAVEA                CORRECTLY
+*
+OPVS     OPEN (OUTACB,,INDCB,INPUT)       OPEN INPUT AND OOUTPUT FILES
+*        copy from input buffer to output buffer
+GOREAD   GET    INDD,LOCOREC              READ A RECORD FROM SEQ FILE
+         MVC    KRECNR,RECNR              MOVE PRIMARY KEY OVER
+         MVC    KSPACE1,SPACE1            JUST SPACE
+         MVC    KRECLOC,RECLOC            MOVE RECORD LOCATOR
+         MVC    KSPACE2,SPACE2            JUST SPACE
+         MVC    KSALARRY,SALARY           MOVE SALARY TO KSDS
+         MVC    KSPACE3,SPACE3            JUST SPACE
+         MVC    KSTARTDA,STARTDA          EMPLOYEE START DATE
+         PUT    RPL=OUTRPL                WRITE TO KSDS NOW!
+         B      GOREAD
+FINISH   CLOSE  (OUTACB,,INDD)            CLOSSE INPUT AND OUTPUT
+         L      R13,SAVEA+4               FIND REGS
+         RETURN (14,12),RC=0
+*
+         LTORG
+*                                         REG SAVE AREA
+SAVEA    DS    18F
+*
+OUTACB    ACB AM=VSAM,DDNAME=OUTDD,BUFND=5,MACRF=(KEY,SEQ,OUT)
+OUTRPL    RPL ACB=OUTACB,AM=VSAM,AREA=LOCOREC,AREALEN=24,              X
+               OPTCD=(KEY,SEQ,SYN),RECLEN=74
+
+INDD      DCB  DDNAME=INDD,DSORG=PS,MACRF=PM,RECFM=FB,BLKSIZE=0,       X
+               LRECL=80,EODAD=FINISH
+*
+LOCOREC  DS   0CL24                HOLDS THE WHOLE RECORD 24bytes tot
+RECNR    DC   CL2                  PRIMARY KEY RECORD COUNTER
+SPACE1   DC   CL1' '
+RECLOC   DC   CL6                  RECORD LOCATOR 6 BYTES
+SPACE2   DC   CL1' '
+SALARY   DC   CL5                  YEARLY SALARY
+SPACE3   DC   CL1' '
+STARTDA  DC   CL8                  START DATE
+*
+KSDSREC  DS   0CL24                HOLDS THE WHOLE RECORD 24BYTES TOT
+kRECNR   DC   CL2                  PRIMARY KEY RECORD COUNTER
+kSPACE1  DC   CL1' '
+kRECLOC  DC   CL6                  RECORD LOCATOR 6 BYTES sec key
+kSPACE2  DC   CL1' '
+kSALARY  DC   CL5                  YEARLY SALARY
+kSPACE3  DC   CL1' ' 
+kSTARTDA DC   CL8                  START DATE
+         END
