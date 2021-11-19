@@ -1,3 +1,4 @@
+<a href="https://github.com/codenotary/cas"><img src="https://raw.githubusercontent.com/codenotary/cas/master/extra/badge/secured-by-cas.svg" width="109px;"/></a>
 # VSAM Tutorial
 
 This repository contains sample JCL and Cobol programs to show how to use VSAM.
